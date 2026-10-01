@@ -1,0 +1,27 @@
+﻿@{
+    ViewBag.Title = "Register";
+}
+
+<h2>Register</h2>
+
+<form action="/Account/Register" method="post">
+    <label>Display Name</label>
+    <input type="text" name="DisplayName" />
+    <br />
+
+    <label>Email</label>
+    <input type="email" name="Email" />
+    <br />
+
+    <label>Password</label>
+    <input type="password" name="Password" />
+    <br />
+
+    <label>Confirm Password</label>
+    <input type="password" name="ConfirmPassword" />
+    <br />
+
+    <button type="submit">Register</button>
+</form>
+
+<a href="/Account/Login">Login here</a>

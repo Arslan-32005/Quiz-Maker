@@ -8,8 +8,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddDbContext<QuizContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
-
-builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<QuizContext>();
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(Options => {
     Options.Password.RequireDigit = false;
     Options.Password.RequiredLength = 6;
