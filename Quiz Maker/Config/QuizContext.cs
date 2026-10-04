@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 using Quiz_Maker.Models;
 
 namespace Quiz_Maker.Config
@@ -17,6 +18,16 @@ namespace Quiz_Maker.Config
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+            // put UTC date on all DateTime properties
+            builder.Entity<Quiz>()
+                .Property(q => q.CreatedAt)
+                .HasDefaultValueSql("GETUTCDATE()");
+            builder.Entity<ApplicationUser>()
+                .Property(u => u.CreatedAt)
+                .HasDefaultValueSql("GETUTCDATE()");
+            builder.Entity<Attempt>()
+                .Property(a => a.AttemptedAt)
+                .HasDefaultValueSql("GETUTCDATE()");
             // uniqueindex on sharecode
             builder.Entity<Quiz>()
                 .HasIndex(q => q.ShareCode)
@@ -41,13 +52,13 @@ namespace Quiz_Maker.Config
                 .OnDelete(DeleteBehavior.Cascade);
             // quiz to user relationship many to one
             builder.Entity<Quiz>()
-                .HasOne<ApplicationUser>()
+                .HasOne(q => q.User)
                 .WithMany(u => u.Quizzes)
                 .HasForeignKey(q => q.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
             // attempt to user relationship many to one
             builder.Entity<Attempt>()
-                .HasOne<ApplicationUser>()
+                .HasOne(a => a.User)
                 .WithMany(u => u.Attempts)
                 .HasForeignKey(a => a.UserId)
                 .IsRequired(false)

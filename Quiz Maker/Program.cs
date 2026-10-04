@@ -2,13 +2,22 @@ using Microsoft.EntityFrameworkCore;
 using Quiz_Maker.Config;
 using Quiz_Maker.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(Options=>{
+    Options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+
+});
 builder.Services.AddRazorPages();
 builder.Services.AddDbContext<QuizContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>(Options => {
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(Options =>
+{
+    Options.User.RequireUniqueEmail = true;
+    Options.Lockout.MaxFailedAccessAttempts = 5;
+    Options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+    Options.Lockout.AllowedForNewUsers = true;
     Options.Password.RequireDigit = false;
     Options.Password.RequiredLength = 6;
     Options.Password.RequireNonAlphanumeric = true;
@@ -16,6 +25,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(Options => {
     Options.Password.RequireLowercase = true;
 }).AddEntityFrameworkStores<QuizContext>()
     .AddDefaultTokenProviders();
+
 
 
 

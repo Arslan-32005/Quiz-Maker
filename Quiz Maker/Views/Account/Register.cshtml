@@ -1,27 +1,34 @@
-﻿@{
+﻿@model Quiz_Maker.ViewModel.RegisterViewModel
+
+@{
     ViewBag.Title = "Register";
 }
 
 <h2>Register</h2>
+<div asp-validation-summary="ModelOnly"></div>
 
-<form action="/Account/Register" method="post">
+<form asp-action="Register" asp-controller="Account"  method="post">
     <label>Display Name</label>
-    <input type="text" name="DisplayName" />
+    <input type="text" asp-for="DisplayName" />
+    <span asp-validation-for="DisplayName"></span>
     <br />
 
     <label>Email</label>
-    <input type="email" name="Email" />
+    <input type="email" asp-for="Email" />
+    <span asp-validation-for="Email"></span>
     <br />
 
     <label>Password</label>
-    <input type="password" name="Password" />
+    <input type="password" asp-for="Password" />
+    <span asp-validation-for="Password"></span>
     <br />
 
     <label>Confirm Password</label>
-    <input type="password" name="ConfirmPassword" />
+    <input type="password" asp-for="ConfirmPassword" />
+    <span asp-validation-for="ConfirmPassword"></span>
     <br />
 
     <button type="submit">Register</button>
 </form>
-
 <a href="/Account/Login">Login here</a>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

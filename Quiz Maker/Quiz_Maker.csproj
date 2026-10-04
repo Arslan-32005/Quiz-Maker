@@ -1,10 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>Quiz_Maker</RootNamespace>
+    <UserSecretsId>edfaa679-210b-4049-9f89-ab7d2931e9fd</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

@@ -14,18 +14,23 @@ namespace Quiz_Maker.Controllers
             _userManager = userManager;
             _signInManager = signInManager;
         }
-        public IActionResult Index()
-        {
-            return View();
-        }
         [HttpGet]
         public IActionResult Register()
         {
+
+            if (User.Identity?.IsAuthenticated == true)
+            {
+                return RedirectToAction("Index", "Home");
+            }
             return View();
         }
         [HttpPost]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
+            if(User.Identity?.IsAuthenticated == true)
+            {
+                return RedirectToAction("Index", "Home");
+            }
             if (ModelState.IsValid)
             {
                 ApplicationUser user = new ApplicationUser
@@ -42,6 +47,11 @@ namespace Quiz_Maker.Controllers
                 }
                 foreach (var error in result.Errors)
                 {
+                    if(error.Code== "DuplicateUserName")
+                    {
+                        continue;
+
+                    }
                     ModelState.AddModelError("", error.Description);
                 }
             }
@@ -50,15 +60,26 @@ namespace Quiz_Maker.Controllers
         [HttpGet]
         public IActionResult Login(string? returnUrl)
         {
+
+            if (User.Identity?.IsAuthenticated == true)
+            {
+                return RedirectToAction("Index", "Home");
+            }
             ViewBag.ReturnUrl = returnUrl;
             return View();
         }
         [HttpPost]
         public async Task<ActionResult> Login(LoginViewModel model, string? returnUrl)
         {
+            ViewBag.ReturnUrl = returnUrl;
             if (ModelState.IsValid)
             {
-                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
+                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: true);
+                if (result.IsLockedOut)
+                {
+                    ModelState.AddModelError("", "Your account is locked out. Please try again after 15 minutes.");
+                    return View(model);
+                }
                 if (result.Succeeded)
                 {
                     if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
@@ -69,7 +90,7 @@ namespace Quiz_Maker.Controllers
                 }
                 ModelState.AddModelError("", "Invalid login attempt.");
             }
-            ViewBag.ReturnUrl = returnUrl;
+            
             return View(model);
         }
         [HttpPost]
