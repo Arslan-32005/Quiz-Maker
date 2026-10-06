@@ -3,6 +3,7 @@ using Quiz_Maker.Config;
 using Quiz_Maker.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Quiz_Maker.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -12,6 +13,7 @@ builder.Services.AddControllersWithViews(Options=>{
 });
 builder.Services.AddRazorPages();
 builder.Services.AddDbContext<QuizContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
+builder.Services.AddScoped<IDocumentTextExtractor, DocumentTextExtractor>();
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(Options =>
 {
     Options.User.RequireUniqueEmail = true;

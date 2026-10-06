@@ -1,0 +1,33 @@
+﻿@model Quiz_Maker.Services.DocumentTextResult?
+<form asp-action="Upload" asp-controller="Quiz" method="post" enctype="multipart/form-data">
+    <input type="file" name="file" accept=".pdf,.docx"/>
+    <input type="submit" value="Upload" />
+</form>
+@if (Model != null)
+{
+    if (Model.Success == false)
+    {
+        <div class="alert alert-danger" role="alert">
+            Error: @Model.Error
+        </div>
+    }
+    if (Model.Success == true)
+    {
+        <div>
+            <h3>Text Length:</h3>
+            <p>@Model.Text.Length characters</p>
+        </div>
+        if (Model.WasTruncated)
+        {
+            <div class="alert alert-warning" role="alert">
+                Warning: The extracted text was truncated to 30,000 characters for display purposes.
+            </div>
+        }
+        <div>
+            <h2>Preview (First 500 Characters)</h2>
+            <pre>@Model.Text.Substring(0, Math.Min(500, Model.Text.Length))</pre>
+        </div>
+    }
+}
+
+
