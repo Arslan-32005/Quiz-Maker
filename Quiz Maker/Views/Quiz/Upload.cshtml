@@ -1,4 +1,7 @@
 ﻿@model Quiz_Maker.Services.DocumentTextResult?
+@{
+    var generation = ViewBag.Generation as Quiz_Maker.Services.QuizGenerationResult;
+}
 <form asp-action="Upload" asp-controller="Quiz" method="post" enctype="multipart/form-data">
     <input type="file" name="file" accept=".pdf,.docx"/>
     <input type="submit" value="Upload" />
@@ -27,6 +30,31 @@
             <h2>Preview (First 500 Characters)</h2>
             <pre>@Model.Text.Substring(0, Math.Min(500, Model.Text.Length))</pre>
         </div>
+        @if (generation != null)
+        {
+            if (!generation.Success)
+            {
+                <div class="alert alert-danger" role="alert">@generation.Error</div>
+            }
+            else if (generation.Quiz != null)
+            {
+                <h3>Generated Questions (@generation.Quiz.Questions.Count)</h3>
+                for (var i = 0; i < generation.Quiz.Questions.Count; i++)
+                {
+                    var q = generation.Quiz.Questions[i];
+                    <div class="mb-3">
+                        <p><strong>@(i + 1). @q.Text</strong></p>
+                        <ul>
+                            @for (var j = 0; j < q.Options.Count; j++)
+                            {
+                                <li>@(j == q.CorrectIndex ? "✔ " : "")@q.Options[j]</li>
+                            }
+                        </ul>
+                        <small>@q.Explanation</small>
+                    </div>
+                }
+            }
+        }
     }
 }
 

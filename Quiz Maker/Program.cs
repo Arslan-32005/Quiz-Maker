@@ -14,6 +14,11 @@ builder.Services.AddControllersWithViews(Options=>{
 builder.Services.AddRazorPages();
 builder.Services.AddDbContext<QuizContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 builder.Services.AddScoped<IDocumentTextExtractor, DocumentTextExtractor>();
+builder.Services.Configure<GeminiOptions>(builder.Configuration.GetSection("Gemini"));
+builder.Services.AddHttpClient<IQuizGenerator, GeminiQuizGenerator>(client =>
+{
+    client.Timeout = TimeSpan.FromSeconds(60);
+});
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(Options =>
 {
     Options.User.RequireUniqueEmail = true;
