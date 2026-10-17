@@ -2,8 +2,15 @@
 @{
     var generation = ViewBag.Generation as Quiz_Maker.Services.QuizGenerationResult;
 }
+<div asp-validation-summary="ModelOnly"></div>
 <form asp-action="Upload" asp-controller="Quiz" method="post" enctype="multipart/form-data">
-    <input type="file" name="file" accept=".pdf,.docx"/>
+   <label for="Title" >Title:</label>
+   <input type="text" name="Title" id="Title" required maxlength="100" />
+   <label for="TotalQuestions">Total Questions:</label>
+   <input type="number" name="TotalQuestions" id="TotalQuestions" min="3" max="15" value="5" />
+
+    <label for="file">Choose a file to upload:</label>
+    <input type="file" name="file" id="file" accept=".pdf,.docx"/>
     <input type="submit" value="Upload" />
 </form>
 @if (Model != null)
@@ -23,7 +30,7 @@
         if (Model.WasTruncated)
         {
             <div class="alert alert-warning" role="alert">
-                Warning: The extracted text was truncated to 30,000 characters for display purposes.
+                Warning: The text was  cut to 30,000 characters.
             </div>
         }
         <div>
@@ -57,5 +64,6 @@
         }
     }
 }
+
 
 

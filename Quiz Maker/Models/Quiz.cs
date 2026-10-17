@@ -5,7 +5,7 @@ namespace Quiz_Maker.Models
     {
         public int Id { get; set; }
         [Required]
-        public string UserId { get; set; }
+        public string? UserId { get; set; }
         public ApplicationUser?  User  { get; set; }
         [Required]
         [StringLength(100)]
@@ -17,7 +17,7 @@ namespace Quiz_Maker.Models
         public string ShareCode { get; set; }
         [Required]
         [StringLength(255)]
-        public string SourceFileName { get; set; }
+        public string SourceFileName { get; set; } 
         [Required]
         [StringLength(10)]
         public string SourceFileType { get; set; }

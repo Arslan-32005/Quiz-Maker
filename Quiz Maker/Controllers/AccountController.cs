@@ -5,7 +5,7 @@ using Quiz_Maker.ViewModel;
 
 namespace Quiz_Maker.Controllers
 {
-    public class AccountController : Controller
+    public class AccountController : Controller 
     {
         private readonly UserManager<ApplicationUser> _userManager; 
         private readonly SignInManager<ApplicationUser> _signInManager;

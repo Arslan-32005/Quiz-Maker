@@ -1,0 +1,26 @@
+﻿@model Quiz_Maker.Models.Quiz
+
+<h2>@Model.Title</h2>
+
+<label for="SourceFileName">Source File Name:</label>
+<input type="text" id="SourceFileName" value="@Model.SourceFileName" readonly />
+<label for="TotalQuestions">Total Questions:</label>
+<input type="text" id="TotalQuestions" value="@Model.TotalQuestions" readonly />
+<label for="ShareCode">Share Code:</label>
+<input type="text" id="ShareCode" value="@Model.ShareCode" readonly />
+
+@foreach (var question in Model.Questions.OrderBy(q => q.Order))
+{
+    <div class="question mb-3">
+        <p><strong>@question.Order. @question.Text</strong></p>
+        <ul>
+            @foreach (var option in question.Options.OrderBy(o => o.Order))
+            {
+                <li>@(option.IsCorrect ? "✔ " : "")@option.Text</li>
+            }
+        </ul>
+        <small>@question.Explanation</small>
+    </div>
+}
+
+<a asp-action="Upload">Upload another document</a>
