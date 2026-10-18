@@ -42,30 +42,30 @@ namespace Quiz_Maker.Controllers
             if (title.Length > 100)
             {
                 ModelState.AddModelError("", "Title cannot exceed 100 characters.");
-                return View(); 
+                return View();
             }
             totalQuestions = Math.Clamp(totalQuestions, 3, 15);
             var result = await _documentTextExtractor.ExtractAsync(file);
 
             if (result.Success)
             {
-               var generation = await _quizGenerator.GenerateAsync(
-                    result.Text, totalQuestions, HttpContext.RequestAborted);
-               ViewBag.Generation = generation;
-               
+                var generation = await _quizGenerator.GenerateAsync(
+                     result.Text, totalQuestions, HttpContext.RequestAborted);
+                ViewBag.Generation = generation;
+
                 if (generation.Success && generation.Quiz != null)
                 {
                     var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                    if(userId == null)
+                    if (userId == null)
                     {
                         ModelState.AddModelError("", "User is not authenticated.");
                         return View(result);
                     }
                     var extension = Path.GetExtension(file.FileName).TrimStart('.').ToLowerInvariant();
                     var filename = Path.GetFileName(file.FileName);
-                    if(filename.Length > 255)
+                    if (filename.Length > 255)
                     {
-                        filename=filename.Substring(0, 255);
+                        filename = filename.Substring(0, 255);
                     }
                     var quiz = new Quiz
                     {
@@ -77,7 +77,7 @@ namespace Quiz_Maker.Controllers
                         ShareCode = Guid.NewGuid().ToString("N").Substring(0, 12),
                         IsPublic = true
                     };
-                    
+
                     for (int i = 0; i < generation.Quiz.Questions.Count; i++)
                     {
                         var gq = generation.Quiz.Questions[i];
@@ -99,7 +99,8 @@ namespace Quiz_Maker.Controllers
                         }
                         quiz.Questions.Add(question);
                     }
-                    try {
+                    try
+                    {
                         _quizContext.Quizzes.Add(quiz);
                         await _quizContext.SaveChangesAsync();
                         return RedirectToAction("Details", new { id = quiz.Id });
@@ -114,15 +115,15 @@ namespace Quiz_Maker.Controllers
             return View(result);
         }
         [HttpGet]
-        public async Task<IActionResult>Details(int id)
+        public async Task<IActionResult> Details(int id)
         {
-            var quiz=await _quizContext.Quizzes.Where(q => q.Id == id)
+            var quiz = await _quizContext.Quizzes.Where(q => q.Id == id)
                 .Include(qz => qz.Questions)
                 .ThenInclude(qn => qn.Options)
                 .AsNoTracking()
                 .FirstOrDefaultAsync();
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (quiz==null || userId==null || userId != quiz?.UserId)
+            if (quiz == null || userId == null || userId != quiz?.UserId)
             {
                 return NotFound();
             }
@@ -162,6 +163,76 @@ namespace Quiz_Maker.Controllers
             await _quizContext.SaveChangesAsync();
             return RedirectToAction("MyQuizzes");
         }
+        [HttpGet]
+        public async Task<IActionResult> Take(string shareCode)
+        {
+            if (string.IsNullOrWhiteSpace(shareCode))
+            {
+                return NotFound();
+            }
+            var quiz = await _quizContext.Quizzes
+                .Where(q => q.ShareCode == shareCode && q.IsPublic)
+                .Include(qz => qz.Questions)
+                .ThenInclude(qn => qn.Options)
+                .AsNoTracking()
+                .FirstOrDefaultAsync();
+            if (quiz == null)
+            {
+                return NotFound();
+            }
+            return View(quiz);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+      
+        public async Task<IActionResult> Submit(string shareCode, Dictionary<int, int> answers)
+        {
+            answers ??= new Dictionary<int, int>();
+            var quiz = await _quizContext.Quizzes
+                .Where(q => q.ShareCode == shareCode && q.IsPublic)
+                .Include(qz => qz.Questions)
+                .ThenInclude(qn => qn.Options)
+                .AsNoTracking()
+                .FirstOrDefaultAsync();
+            if (quiz == null)
+            {
+                return NotFound();
+            }
 
+            int score = 0;
+            foreach (var question in quiz.Questions)
+            {
+                if (!answers.TryGetValue(question.Id, out var selectedOptionId))
+                {
+                    continue;
+                }
+                var selectedOption = question.Options.FirstOrDefault(o => o.Id == selectedOptionId);
+                if (selectedOption != null && selectedOption.IsCorrect)
+                {
+                    score++;
+                }
+            }
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var attempt = new Attempt
+            {
+                QuizId = quiz.Id,
+                UserId = userId,
+                Score = score,
+                TotalQuestions = quiz.Questions.Count,
+                AttemptedAt = DateTime.UtcNow
+            };
+
+            _quizContext.Attempts.Add(attempt);
+            await _quizContext.SaveChangesAsync(); 
+            var result = new QuizResultViewModel
+            {
+                Quiz = quiz,
+                Score = score,
+                UserAnswers = answers
+            };
+
+            return View("Result", result);
+        }
     }
 }

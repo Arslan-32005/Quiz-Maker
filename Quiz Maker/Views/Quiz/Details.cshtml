@@ -8,6 +8,7 @@
 <input type="text" id="TotalQuestions" value="@Model.TotalQuestions" readonly />
 <label for="ShareCode">Share Code:</label>
 <input type="text" id="ShareCode" value="@Model.ShareCode" readonly />
+<p>Share link: <a href="@Url.Action("Take", "Quiz", new { shareCode = Model.ShareCode }, Context.Request.Scheme)">@Url.Action("Take", "Quiz", new { shareCode = Model.ShareCode }, Context.Request.Scheme)</a></p>
 
 @foreach (var question in Model.Questions.OrderBy(q => q.Order))
 {

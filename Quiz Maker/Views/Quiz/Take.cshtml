@@ -1,0 +1,25 @@
+﻿@model Quiz_Maker.Models.Quiz
+<h2>Take Quiz</h2>
+<label for="quizTitle">Quiz Title:</label>
+<input type="text" id="quizTitle" value="@Model.Title" readonly />
+<label for="TotalQuestions">Total Questions:</label>
+<input type="text" id="TotalQuestions" value="@Model.Questions.Count" readonly />
+<form asp-action="Submit" method="post">
+<input type="hidden" name="shareCode" value="@Model.ShareCode" />
+@foreach (var question in Model.Questions.OrderBy(q => q.Order))
+{
+    <div class="question">
+        <h3>@question.Text</h3>
+        <ul>
+            @foreach (var option in question.Options.OrderBy(o => o.Order))
+            {
+                <li>
+                    <input type="radio" name="answers[@question.Id]" value="@option.Id" id="option_@option.Id">
+                    <label for="option_@option.Id">@option.Text</label>
+                </li>
+            }
+        </ul>
+    </div>
+}
+<button type="submit">Submit Quiz</button>
+</form>

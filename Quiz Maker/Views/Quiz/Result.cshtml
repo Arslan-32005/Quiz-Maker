@@ -1,0 +1,29 @@
+﻿@model Quiz_Maker.Models.QuizResultViewModel
+@{
+    ViewData["Title"] = "Quiz Result";
+}
+
+<h2>@Model.Quiz.Title</h2>
+<h4>Score: @Model.Score / @Model.Quiz.Questions.Count</h4>
+
+@foreach (var question in Model.Quiz.Questions.OrderBy(q => q.Order))
+{
+    Model.UserAnswers.TryGetValue(question.Id, out var selectedId);
+
+    <div class="question mb-3">
+        <h5>@question.Order. @question.Text</h5>
+        <ul>
+            @foreach (var option in question.Options.OrderBy(o => o.Order))
+            {
+                var isSelected = option.Id == selectedId;
+                var cls = option.IsCorrect ? "text-success fw-bold" : (isSelected ? "text-danger" : "");
+                <li class="@cls">
+                    @(isSelected ? "👉 " : "")@option.Text @(option.IsCorrect ? "✔" : "")
+                </li>
+            }
+        </ul>
+        <small>@question.Explanation</small>
+    </div>
+}
+
+<a asp-action="MyQuizzes">My Quizzes</a>
