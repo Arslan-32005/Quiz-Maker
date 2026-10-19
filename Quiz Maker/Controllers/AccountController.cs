@@ -29,7 +29,7 @@ namespace Quiz_Maker.Controllers
         {
             if(User.Identity?.IsAuthenticated == true)
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("DashBoard", "Quiz");
             }
             if (ModelState.IsValid)
             {
@@ -43,7 +43,7 @@ namespace Quiz_Maker.Controllers
                 if (result.Succeeded)
                 {
                     await _signInManager.SignInAsync(user, isPersistent: false);
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("DashBoard", "Quiz");
                 }
                 foreach (var error in result.Errors)
                 {
@@ -86,7 +86,7 @@ namespace Quiz_Maker.Controllers
                     {
                         return Redirect(returnUrl);
                     }
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("DashBoard", "Quiz");
                 }
                 ModelState.AddModelError("", "Invalid login attempt.");
             }

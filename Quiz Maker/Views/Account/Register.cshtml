@@ -1,34 +1,44 @@
 ﻿@model Quiz_Maker.ViewModel.RegisterViewModel
 
 @{
-    ViewBag.Title = "Register";
+    ViewData["Title"] = "Register";
 }
 
-<h2>Register</h2>
-<div asp-validation-summary="ModelOnly"></div>
+<div class="auth-card">
+    <h2>Register</h2>
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-<form asp-action="Register" asp-controller="Account"  method="post">
-    <label>Display Name</label>
-    <input type="text" asp-for="DisplayName" />
-    <span asp-validation-for="DisplayName"></span>
-    <br />
+    <form asp-action="Register" asp-controller="Account" method="post">
+        <div class="mb-3">
+            <label for="DisplayName" class="form-label">Display Name</label>
+            <input type="text" asp-for="DisplayName" class="form-control" />
+            <span asp-validation-for="DisplayName" class="text-danger"></span>
+        </div>
 
-    <label>Email</label>
-    <input type="email" asp-for="Email" />
-    <span asp-validation-for="Email"></span>
-    <br />
+        <div class="mb-3">
+            <label for="Email" class="form-label">Email</label>
+            <input type="email" asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
 
-    <label>Password</label>
-    <input type="password" asp-for="Password" />
-    <span asp-validation-for="Password"></span>
-    <br />
+        <div class="mb-3">
+            <label for="Password" class="form-label">Password</label>
+            <input type="password" asp-for="Password" class="form-control" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
 
-    <label>Confirm Password</label>
-    <input type="password" asp-for="ConfirmPassword" />
-    <span asp-validation-for="ConfirmPassword"></span>
-    <br />
+        <div class="mb-3">
+            <label for="ConfirmPassword" class="form-label">Confirm Password</label>
+            <input type="password" asp-for="ConfirmPassword" class="form-control" />
+            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+        </div>
 
-    <button type="submit">Register</button>
-</form>
-<a href="/Account/Login">Login here</a>
-@section Scripts { <partial name="_ValidationScriptsPartial" /> }
+        <button type="submit" class="btn btn-primary w-100">Register</button>
+    </form>
+
+    <p class="mt-3">Already have an account? <a href="/Account/Login">Login here</a></p>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,15 +1,15 @@
 ﻿@using Microsoft.AspNetCore.Identity
+@using Quiz_Maker.Models
 @inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
 
 @if (SignInManager.IsSignedIn(User))
 {
-    <span>Hello @User.Identity.Name</span>
-    <form asp-action="Logout" asp-controller="Account" method="post">
-        <button type="submit">Logout</button>
-    </form>
+    var currentUser = await UserManager.GetUserAsync(User);
+    <span class="fw-semibold text-dark">Hello @(currentUser?.DisplayName ?? User.Identity?.Name)</span>
 }
 else
 {
-    <a href="/Account/Register">Register</a>
-    <a href="/Account/Login">Login</a>
+    <a class="nav-link text-dark" href="/Account/Register">Register</a>
+    <a class="nav-link text-dark" href="/Account/Login">Login</a>
 }

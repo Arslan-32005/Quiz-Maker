@@ -1,0 +1,52 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Quiz_Maker.Models
+@model List<Quiz>
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    ViewData["Title"] = "Dashboard";
+    var currentUser = await UserManager.GetUserAsync(User);
+}
+
+<div class="dashboard">
+
+    <div class="dashboard-header">
+        <h2>Welcome, @(currentUser?.DisplayName ?? User.Identity?.Name)</h2>
+    </div>
+
+    <div class="dashboard-nav">
+        <a class="btn btn-outline-primary" asp-controller="Home" asp-action="Index">Home</a>
+        <a class="btn btn-outline-primary" asp-controller="Quiz" asp-action="Upload">Upload</a>
+        <a class="btn btn-outline-primary" asp-controller="Quiz" asp-action="MyQuizzes">My Quizzes</a>
+    </div>
+
+    <div class="dashboard-section">
+        <h4>Your Quizzes</h4>
+
+        @if (!Model.Any())
+        {
+            <div class="dashboard-empty">
+                <p>Abhi tak koi quiz nahi bana.</p>
+                <a class="btn btn-primary" asp-controller="Quiz" asp-action="Upload">Create new quiz</a>
+            </div>
+        }
+        else
+        {
+            <div class="quiz-list">
+                @foreach (var quiz in Model)
+                {
+                    <a class="quiz-link" asp-controller="Quiz" asp-action="Details" asp-route-id="@quiz.Id">
+                        @quiz.Title
+                    </a>
+                }
+            </div>
+        }
+    </div>
+
+    <div class="dashboard-logout">
+        <form asp-controller="Account" asp-action="Logout" method="post">
+            <button type="submit" class="btn btn-outline-danger">Logout</button>
+        </form>
+    </div>
+
+</div>

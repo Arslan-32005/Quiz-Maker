@@ -3,27 +3,30 @@
     ViewData["Title"] = "Quiz Result";
 }
 
-<h2>@Model.Quiz.Title</h2>
-<h4>Score: @Model.Score / @Model.Quiz.Questions.Count</h4>
+<div class="dashboard">
+    <h2>@Model.Quiz.Title</h2>
+    <h4>Score: @Model.Score / @Model.Quiz.Questions.Count</h4>
 
-@foreach (var question in Model.Quiz.Questions.OrderBy(q => q.Order))
-{
-    Model.UserAnswers.TryGetValue(question.Id, out var selectedId);
+    @foreach (var question in Model.Quiz.Questions.OrderBy(q => q.Order))
+    {
+        Model.UserAnswers.TryGetValue(question.Id, out var selectedId);
 
-    <div class="question mb-3">
-        <h5>@question.Order. @question.Text</h5>
-        <ul>
-            @foreach (var option in question.Options.OrderBy(o => o.Order))
-            {
-                var isSelected = option.Id == selectedId;
-                var cls = option.IsCorrect ? "text-success fw-bold" : (isSelected ? "text-danger" : "");
-                <li class="@cls">
-                    @(isSelected ? "👉 " : "")@option.Text @(option.IsCorrect ? "✔" : "")
-                </li>
-            }
-        </ul>
-        <small>@question.Explanation</small>
-    </div>
-}
+        <div class="question">
+            <h5>@question.Order. @question.Text</h5>
+            <ul>
+                @foreach (var option in question.Options.OrderBy(o => o.Order))
+                {
+                    var isSelected = option.Id == selectedId;
+                    var letter = (char)('a' + option.Order - 1);
+                    var cls = option.IsCorrect
+                        ? "text-success fw-bold"
+                        : (isSelected ? "text-danger fw-bold" : "");
+                    <li class="@cls">@letter) @option.Text</li>
+                }
+            </ul>
+            <small>@question.Explanation</small>
+        </div>
+    }
 
-<a asp-action="MyQuizzes">My Quizzes</a>
+    <a asp-action="DashBoard" asp-controller="Quiz">Back to Dashboard</a>
+</div>

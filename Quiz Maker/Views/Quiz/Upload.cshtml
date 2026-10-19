@@ -1,69 +1,72 @@
 ﻿@model Quiz_Maker.Services.DocumentTextResult?
 @{
+    ViewData["Title"] = "Upload Document";
     var generation = ViewBag.Generation as Quiz_Maker.Services.QuizGenerationResult;
 }
-<div asp-validation-summary="ModelOnly"></div>
-<form asp-action="Upload" asp-controller="Quiz" method="post" enctype="multipart/form-data">
-   <label for="Title" >Title:</label>
-   <input type="text" name="Title" id="Title" required maxlength="100" />
-   <label for="TotalQuestions">Total Questions:</label>
-   <input type="number" name="TotalQuestions" id="TotalQuestions" min="3" max="15" value="5" />
 
-    <label for="file">Choose a file to upload:</label>
-    <input type="file" name="file" id="file" accept=".pdf,.docx"/>
-    <input type="submit" value="Upload" />
-</form>
-@if (Model != null)
-{
-    if (Model.Success == false)
-    {
-        <div class="alert alert-danger" role="alert">
-            Error: @Model.Error
-        </div>
-    }
-    if (Model.Success == true)
-    {
-        <div>
-            <h3>Text Length:</h3>
-            <p>@Model.Text.Length characters</p>
-        </div>
-        if (Model.WasTruncated)
-        {
-            <div class="alert alert-warning" role="alert">
-                Warning: The text was  cut to 30,000 characters.
+<div class="dashboard">
+
+    <div class="dashboard-header">
+        <h2>Create a New Quiz</h2>
+        <a asp-action="DashBoard" asp-controller="Quiz" class="btn btn-outline-primary">Back to Dashboard</a>
+    </div>
+
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+    <div class="dashboard-section mb-4">
+        <form asp-action="Upload" asp-controller="Quiz" method="post" id="uploadForm" enctype="multipart/form-data">
+
+            <div class="mb-3">
+                <label for="Title" class="form-label">Title</label>
+                <input type="text" name="Title" id="Title" class="form-control" required maxlength="100" placeholder="e.g. Chapter 3 review" />
             </div>
-        }
-        <div>
-            <h2>Preview (First 500 Characters)</h2>
-            <pre>@Model.Text.Substring(0, Math.Min(500, Model.Text.Length))</pre>
-        </div>
-        @if (generation != null)
+
+            <div class="mb-3">
+                <label for="TotalQuestions" class="form-label">Total Questions (3 to 15)</label>
+                <input type="number" name="TotalQuestions" id="TotalQuestions" class="form-control" min="3" max="15" value="5" />
+            </div>
+
+            <div class="mb-4">
+                <label for="file" class="form-label">Document (PDF or DOCX, max 5 MB)</label>
+                <input type="file" name="file" id="file" class="form-control" accept=".pdf,.docx" />
+            </div>
+
+            <div id="errorBox" class="text-danger mb-3"></div>
+
+            <button type="submit" id="uploadBtn" class="btn btn-primary w-100">Upload and Generate</button>
+        </form>
+    </div>
+
+    @if (generation != null)
+    {
+        if (!generation.Success)
         {
-            if (!generation.Success)
+            <div class="alert alert-danger" role="alert">@generation.Error</div>
+        }
+        else if (generation.Quiz != null)
+        {
+            <h4 class="mb-3">Generated Questions (@generation.Quiz.Questions.Count)</h4>
+
+            for (var i = 0; i < generation.Quiz.Questions.Count; i++)
             {
-                <div class="alert alert-danger" role="alert">@generation.Error</div>
-            }
-            else if (generation.Quiz != null)
-            {
-                <h3>Generated Questions (@generation.Quiz.Questions.Count)</h3>
-                for (var i = 0; i < generation.Quiz.Questions.Count; i++)
-                {
-                    var q = generation.Quiz.Questions[i];
-                    <div class="mb-3">
-                        <p><strong>@(i + 1). @q.Text</strong></p>
-                        <ul>
-                            @for (var j = 0; j < q.Options.Count; j++)
-                            {
-                                <li>@(j == q.CorrectIndex ? "✔ " : "")@q.Options[j]</li>
-                            }
-                        </ul>
-                        <small>@q.Explanation</small>
-                    </div>
-                }
+                var q = generation.Quiz.Questions[i];
+                <div class="question">
+                    <h5>@(i + 1). @q.Text</h5>
+                    <ul>
+                        @for (var j = 0; j < q.Options.Count; j++)
+                        {
+                            var letter = (char)('a' + j);
+                            <li class="@(j == q.CorrectIndex ? "text-success fw-bold" : "")">@letter) @q.Options[j]</li>
+                        }
+                    </ul>
+                    <small>@q.Explanation</small>
+                </div>
             }
         }
     }
+
+</div>
+
+@section Scripts {
+    <script src="~/js/upload.js" asp-append-version="true"></script>
 }
-
-
-

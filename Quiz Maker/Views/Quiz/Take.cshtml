@@ -1,25 +1,33 @@
 ﻿@model Quiz_Maker.Models.Quiz
-<h2>Take Quiz</h2>
-<label for="quizTitle">Quiz Title:</label>
-<input type="text" id="quizTitle" value="@Model.Title" readonly />
-<label for="TotalQuestions">Total Questions:</label>
-<input type="text" id="TotalQuestions" value="@Model.Questions.Count" readonly />
-<form asp-action="Submit" method="post">
-<input type="hidden" name="shareCode" value="@Model.ShareCode" />
-@foreach (var question in Model.Questions.OrderBy(q => q.Order))
-{
-    <div class="question">
-        <h3>@question.Text</h3>
-        <ul>
-            @foreach (var option in question.Options.OrderBy(o => o.Order))
-            {
-                <li>
-                    <input type="radio" name="answers[@question.Id]" value="@option.Id" id="option_@option.Id">
-                    <label for="option_@option.Id">@option.Text</label>
-                </li>
-            }
-        </ul>
-    </div>
+@{
+    ViewData["Title"] = "Take Quiz";
 }
-<button type="submit">Submit Quiz</button>
-</form>
+
+<div class="dashboard">
+    <h2>@Model.Title</h2>
+    <p>Total Questions: @Model.Questions.Count</p>
+
+    <form asp-action="Submit" asp-controller="Quiz" method="post">
+        <input type="hidden" name="shareCode" value="@Model.ShareCode" />
+
+        @foreach (var question in Model.Questions.OrderBy(q => q.Order))
+        {
+            <div class="question">
+                <h5>@question.Order. @question.Text</h5>
+
+                @foreach (var option in question.Options.OrderBy(o => o.Order))
+                {
+                    var letter = (char)('a' + option.Order - 1);
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio"
+                               name="answers[@question.Id]" value="@option.Id"
+                               id="option_@option.Id" />
+                        <label class="form-check-label" for="option_@option.Id">@letter) @option.Text</label>
+                    </div>
+                }
+            </div>
+        }
+
+        <button type="submit" class="btn btn-primary">Submit Quiz</button>
+    </form>
+</div>

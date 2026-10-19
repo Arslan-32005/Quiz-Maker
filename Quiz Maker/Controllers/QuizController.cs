@@ -234,5 +234,21 @@ namespace Quiz_Maker.Controllers
 
             return View("Result", result);
         }
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult>DashBoard()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+            var quizzes = await _quizContext.Quizzes
+                .Where(q => q.UserId == userId)
+                .OrderByDescending(q => q.Id)
+                .AsNoTracking()
+                .ToListAsync();
+            return View(quizzes);
+        }
     }
 }
