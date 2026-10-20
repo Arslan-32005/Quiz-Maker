@@ -1,34 +1,3 @@
-html {
-  font-size: 14px;
-}
-
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
-}
-
-body {
-  margin-bottom: 60px;
-}
-
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
-}
-
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
-}
 /* ==========================================================
    Quiz_Maker - site.css
    Bootstrap 5 ke upar custom theme
@@ -39,24 +8,40 @@ body {
     --primary: #2563eb;
     --primary-hover: #1d4ed8;
     --primary-soft: #eff6ff;
+    --primary-border: #bfdbfe;
     --text: #0f172a;
-    --muted: #64748b;
-    --border: #e2e8f0;
+    --text-soft: #334155;
+    --muted: #475569;
+    --border: #dbe3ee;
     --surface: #ffffff;
-    --bg: #f1f5f9;
+    --bg: #f5f8fc;
     --danger: #dc2626;
-    --danger-soft: #fef2f2;
+    --danger-soft: #fee2e2;
+    --danger-border: #fca5a5;
+    --danger-text: #7f1d1d;
     --success: #15803d;
-    --success-soft: #f0fdf4;
-    --radius: 12px;
-    --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
-    --shadow-md: 0 10px 30px rgba(15, 23, 42, 0.08);
+    --success-soft: #dcfce7;
+    --success-border: #86efac;
+    --success-text: #14532d;
+    --radius: 14px;
+    --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+    --shadow-md: 0 12px 32px rgba(15, 23, 42, 0.09);
 }
 
 *,
 *::before,
 *::after {
     box-sizing: border-box;
+}
+
+html {
+    font-size: 15px;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
 }
 
 /* ---------- Base ---------- */
@@ -66,7 +51,9 @@ body {
 }
 
 body {
-    background: var(--bg);
+    margin-bottom: 60px;
+    background: radial-gradient(900px 500px at 12% -10%, #bfdbfe 0%, transparent 60%), radial-gradient(800px 500px at 92% 0%, #ddd6fe 0%, transparent 55%), linear-gradient(180deg, #eef4ff 0%, #f5f8fc 420px);
+    background-attachment: fixed;
     color: var(--text);
     font-family: "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
     font-size: 0.97rem;
@@ -81,13 +68,18 @@ main {
 
 h1, h2, h3, h4, h5, h6 {
     color: var(--text);
-    font-weight: 650;
-    letter-spacing: -0.01em;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+}
+
+p {
+    color: var(--text-soft);
 }
 
 a {
     color: var(--primary);
     text-decoration: none;
+    font-weight: 500;
 }
 
     a:hover {
@@ -95,30 +87,37 @@ a {
         text-decoration: underline;
     }
 
+:focus-visible {
+    outline: none;
+}
+
 /* ---------- Navbar ---------- */
 .navbar {
-    background: rgba(255, 255, 255, 0.92) !important;
-    backdrop-filter: saturate(180%) blur(8px);
-    border-bottom: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.94) !important;
+    backdrop-filter: saturate(180%) blur(10px);
+    border-bottom: 1px solid var(--border) !important;
     box-shadow: var(--shadow-sm);
 }
 
 .navbar-brand {
-    font-weight: 700;
-    font-size: 1.15rem;
-    color: var(--primary) !important;
+    font-weight: 800;
+    font-size: 1.2rem;
     letter-spacing: -0.02em;
+    background: linear-gradient(90deg, #2563eb, #7c3aed);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .navbar .nav-link {
     font-weight: 500;
-    color: var(--muted) !important;
+    color: var(--text-soft) !important;
     padding: 0.5rem 0.85rem;
     border-radius: 8px;
 }
 
     .navbar .nav-link:hover {
-        color: var(--text) !important;
+        color: var(--primary) !important;
         background: var(--primary-soft);
     }
 
@@ -138,15 +137,20 @@ a {
 
 /* ---------- Buttons ---------- */
 .btn {
-    border-radius: 8px;
-    font-weight: 500;
+    border-radius: 10px;
+    font-weight: 600;
     padding: 0.55rem 1.1rem;
-    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
 }
 
-    .btn:focus-visible {
-        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25) !important;
+    .btn:active {
+        transform: translateY(1px);
     }
+
+        .btn:focus,
+        .btn:active:focus {
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25) !important;
+        }
 
 .btn-sm {
     padding: 0.3rem 0.75rem;
@@ -156,6 +160,7 @@ a {
 .btn-primary {
     background: var(--primary);
     border-color: var(--primary);
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.25);
 }
 
     .btn-primary:hover {
@@ -166,6 +171,7 @@ a {
 .btn-outline-primary {
     color: var(--primary);
     border-color: var(--primary);
+    background: var(--surface);
 }
 
     .btn-outline-primary:hover {
@@ -177,6 +183,7 @@ a {
 .btn-outline-danger {
     color: var(--danger);
     border-color: var(--danger);
+    background: var(--surface);
 }
 
     .btn-outline-danger:hover {
@@ -186,19 +193,24 @@ a {
     }
 
 .btn:disabled {
-    opacity: 0.65;
+    opacity: 0.6;
     cursor: not-allowed;
+    box-shadow: none;
 }
 
 /* ---------- Forms ---------- */
 .form-control,
 .form-select {
     border: 1px solid var(--border);
-    border-radius: 8px;
+    border-radius: 10px;
     padding: 0.6rem 0.85rem;
     background: var(--surface);
     color: var(--text);
 }
+
+    .form-control::placeholder {
+        color: #94a3b8;
+    }
 
     .form-control:focus,
     .form-select:focus {
@@ -213,38 +225,40 @@ a {
     margin-bottom: 0.4rem;
 }
 
-/* Plain inputs (jin par form-control nahi laga) bhi saaf dikhein */
+/* Plain inputs (jin par form-control nahi laga) */
 input[type="text"]:not(.form-control),
 input[type="number"]:not(.form-control),
 input[type="email"]:not(.form-control),
 input[type="password"]:not(.form-control) {
     border: 1px solid var(--border);
-    border-radius: 8px;
+    border-radius: 10px;
     padding: 0.55rem 0.8rem;
     background: var(--surface);
+    color: var(--text);
     max-width: 420px;
     width: 100%;
     margin-bottom: 0.75rem;
 }
 
 input[type="file"] {
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 0.5rem;
-    background: var(--surface);
+    border: 1px dashed #93c5fd;
+    border-radius: 10px;
+    padding: 0.6rem;
+    background: var(--primary-soft);
+    color: var(--text-soft);
     margin-bottom: 0.75rem;
 }
 
-/* ---------- Alerts ---------- */
+/* ---------- Alerts and validation text ---------- */
 .alert {
-    border-radius: 10px;
+    border-radius: 12px;
     padding: 0.85rem 1rem;
 }
 
 .alert-danger {
     background: var(--danger-soft);
-    color: #991b1b;
-    border-color: #fecaca;
+    color: var(--danger-text);
+    border-color: var(--danger-border);
 }
 
 .text-danger {
@@ -262,7 +276,8 @@ input[type="file"] {
     margin: 2.5rem auto;
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 16px;
+    border-top: 4px solid var(--primary);
+    border-radius: 18px;
     padding: 2.25rem 2rem 1.75rem;
     box-shadow: var(--shadow-md);
 }
@@ -280,7 +295,7 @@ input[type="file"] {
 
     .auth-card .btn-primary {
         width: 100%;
-        padding: 0.7rem 1rem;
+        padding: 0.75rem 1rem;
         font-weight: 600;
         margin-top: 0.5rem;
     }
@@ -292,9 +307,9 @@ input[type="file"] {
         margin: 1.25rem 0 0;
     }
 
-/* ---------- Page container (Dashboard, Upload, Take, Details, Result, My Quizzes) ---------- */
+/* ---------- Page container ---------- */
 .dashboard {
-    max-width: 780px;
+    max-width: 800px;
     margin: 0 auto;
 }
 
@@ -307,9 +322,10 @@ input[type="file"] {
     margin-bottom: 1.5rem;
 }
 
-    .dashboard-header h2 {
-        font-size: 1.6rem;
-        margin: 0;
+    .dashboard-header h2,
+    .dashboard > h2 {
+        font-size: 1.75rem;
+        margin: 0 0 0.5rem;
     }
 
 .dashboard-nav {
@@ -338,9 +354,17 @@ input[type="file"] {
         margin-bottom: 1rem;
     }
 
+    /* Section ke andar section (Details page ka share box) */
+    .dashboard-section .dashboard-section {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        box-shadow: none;
+        padding: 1.1rem 1.25rem;
+    }
+
 .dashboard-empty {
     text-align: center;
-    padding: 1.5rem 0;
+    padding: 2rem 1rem;
     color: var(--muted);
 }
 
@@ -353,35 +377,68 @@ input[type="file"] {
     text-align: right;
 }
 
+/* ---------- Score badge (Result page) ---------- */
+.dashboard > h4 {
+    display: inline-block;
+    background: var(--primary-soft);
+    color: var(--primary-hover);
+    border: 1px solid var(--primary-border);
+    border-radius: 999px;
+    padding: 0.35rem 1.1rem;
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin: 0.25rem 0 1.5rem;
+}
+
+/* ---------- Back links ---------- */
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 1.25rem;
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font-weight: 600;
+    box-shadow: var(--shadow-sm);
+}
+
+    .back-link:hover {
+        color: var(--primary);
+        border-color: var(--primary-border);
+        background: var(--primary-soft);
+        text-decoration: none;
+    }
+
 /* ---------- Quiz links (Dashboard list) ---------- */
 .quiz-link {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.85rem 1rem;
+    padding: 0.9rem 1.1rem;
     border: 1px solid var(--border);
-    border-radius: 10px;
+    border-radius: 12px;
     margin-bottom: 0.6rem;
+    background: var(--surface);
     color: var(--text);
-    font-weight: 500;
+    font-weight: 600;
     transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
 }
 
     .quiz-link::after {
         content: "\2192";
-        color: var(--muted);
+        color: var(--primary);
+        font-size: 1.1rem;
     }
 
     .quiz-link:hover {
         border-color: var(--primary);
         background: var(--primary-soft);
-        color: var(--primary);
+        color: var(--primary-hover);
         text-decoration: none;
     }
-
-        .quiz-link:hover::after {
-            color: var(--primary);
-        }
 
 /* ---------- Question cards (Take, Details, Result) ---------- */
 .question {
@@ -394,9 +451,10 @@ input[type="file"] {
 }
 
     .question h5 {
-        font-size: 1.02rem;
+        font-size: 1.03rem;
         line-height: 1.5;
-        margin-bottom: 0.85rem;
+        color: var(--text);
+        margin-bottom: 0.9rem;
     }
 
     .question ul {
@@ -406,50 +464,97 @@ input[type="file"] {
     }
 
     .question li {
-        padding: 0.5rem 0.75rem;
-        margin-bottom: 0.35rem;
-        border: 1px solid transparent;
-        border-radius: 8px;
+        padding: 0.55rem 0.8rem;
+        margin-bottom: 0.4rem;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        color: var(--text);
+        font-weight: 500;
+        background: var(--surface);
     }
 
+        /* Correct answer: dark green text, clear green background */
         .question li.text-success {
             background: var(--success-soft);
-            border-color: #bbf7d0;
+            border-color: var(--success-border);
+            color: var(--success-text);
+            font-weight: 700;
         }
 
+        /* Wrong chosen answer: dark red text, clear red background */
         .question li.text-danger {
             background: var(--danger-soft);
-            border-color: #fecaca;
+            border-color: var(--danger-border);
+            color: var(--danger-text);
+            font-weight: 700;
         }
 
     .question small {
         display: block;
         color: var(--muted);
-        margin-top: 0.6rem;
-        font-size: 0.88rem;
+        margin-top: 0.7rem;
+        font-size: 0.9rem;
+        line-height: 1.5;
     }
 
     /* Take page ke radio options */
     .question .form-check {
-        padding: 0.5rem 0.75rem 0.5rem 2.25rem;
-        margin-bottom: 0.35rem;
-        border: 1px solid transparent;
-        border-radius: 8px;
-        transition: background 0.15s ease;
+        padding: 0.6rem 0.85rem 0.6rem 2.4rem;
+        margin-bottom: 0.4rem;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: var(--surface);
+        transition: background 0.15s ease, border-color 0.15s ease;
     }
 
         .question .form-check:hover {
             background: var(--bg);
+            border-color: #cbd5e1;
+        }
+
+        .question .form-check:has(.form-check-input:checked) {
+            background: var(--primary-soft);
+            border-color: var(--primary);
         }
 
     .question .form-check-input {
-        margin-left: -1.5rem;
+        margin-left: -1.6rem;
         cursor: pointer;
+        border-color: #94a3b8;
+        width: 1.1em;
+        height: 1.1em;
     }
+
+        .question .form-check-input:checked {
+            background-color: var(--primary);
+            border-color: var(--primary);
+        }
 
     .question .form-check-label {
         cursor: pointer;
+        color: var(--text);
+        font-weight: 500;
     }
+
+/* ---------- Share box (Details page) ---------- */
+.share-box {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+    .share-box .form-control {
+        flex: 1 1 260px;
+        background: var(--surface);
+        color: var(--text-soft);
+        font-size: 0.9rem;
+    }
+
+/* ---------- Delete form (My Quizzes) ---------- */
+form {
+    margin: 0;
+}
 
 /* ---------- Responsive ---------- */
 @media (max-width: 576px) {
@@ -469,18 +574,8 @@ input[type="file"] {
     .question {
         padding: 1rem;
     }
-}
-/* ---------- Share box (Details page) ---------- */
-.share-box {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-    flex-wrap: wrap;
-}
 
-    .share-box .form-control {
-        flex: 1 1 260px;
-        background: var(--bg);
-        color: var(--muted);
-        font-size: 0.9rem;
+    .share-box .btn {
+        width: 100%;
     }
+}

@@ -164,6 +164,7 @@ namespace Quiz_Maker.Controllers
             return RedirectToAction("MyQuizzes");
         }
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Take(string shareCode)
         {
             if (string.IsNullOrWhiteSpace(shareCode))
@@ -184,6 +185,7 @@ namespace Quiz_Maker.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AllowAnonymous]
       
         public async Task<IActionResult> Submit(string shareCode, Dictionary<int, int> answers)
         {
