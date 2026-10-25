@@ -32,6 +32,25 @@ namespace Quiz_Maker.Controllers
         [RequestSizeLimit(6 * 1024 * 1024)]
         public async Task<IActionResult> Upload(IFormFile file, string? title, int totalQuestions)
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                ModelState.AddModelError("", "User is not authenticated.");
+                return View();
+            }
+
+            // Daily limit (Pakistan time, resets at midnight PKT)
+            var pkt = TimeZoneInfo.FindSystemTimeZoneById("Pakistan Standard Time");
+            var todayPkt = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, pkt).Date;
+            var todayStartUtc = TimeZoneInfo.ConvertTimeToUtc(todayPkt, pkt);
+
+            var todayCount = await _quizContext.Quizzes
+                .CountAsync(q => q.UserId == userId && q.CreatedAt >= todayStartUtc);
+            if (todayCount >= 10)
+            {
+                ModelState.AddModelError("", "You have reached the daily limit of 10 quizzes. Try again tomorrow.");
+                return View();
+            }
 
             if (string.IsNullOrWhiteSpace(title))
             {
@@ -55,12 +74,6 @@ namespace Quiz_Maker.Controllers
 
                 if (generation.Success && generation.Quiz != null)
                 {
-                    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                    if (userId == null)
-                    {
-                        ModelState.AddModelError("", "User is not authenticated.");
-                        return View(result);
-                    }
                     var extension = Path.GetExtension(file.FileName).TrimStart('.').ToLowerInvariant();
                     var filename = Path.GetFileName(file.FileName);
                     if (filename.Length > 255)

@@ -15,6 +15,7 @@ namespace Quiz_Maker.Config
         public DbSet<Question> Questions { get; set; }
         public DbSet<Option> Options { get; set; }
         public DbSet<Attempt> Attempts { get; set; }
+        public DbSet<GenerationLog> GenerationLogs { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
