@@ -10,7 +10,7 @@ An ASP.NET Core MVC web app that turns a PDF or DOCX document into a multiple-ch
 - **Text extraction:** Extracts text from the document. Text longer than 30,000 characters is cut, and a warning is shown.
 - **AI generation:** Uses Gemini to generate 3 to 15 multiple-choice questions, each with a correct answer and an explanation.
 - **Quiz details:** Shows all questions, correct answers, explanations, and a share link with a copy button.
-- **Take quiz:** Users open the share link and answer the questions (login required).
+- **Take quiz:** Users open the share link and answer the questions. Login is not required, so guests can take a quiz too.
 - **Result page:** Shows the score, each answer marked correct or wrong, and the explanation.
 - **Attempts:** Every submission and its score is saved in the database.
 - **My Quizzes:** Lists your quizzes with Details and Delete actions. Only the owner can delete a quiz.
@@ -95,10 +95,9 @@ Quiz Maker/
 | Result | ![Result](docs/screenshots/result.png) |
 
 ## Known Limitations
-
-- Only logged-in users can take a quiz. Guest attempts are not supported yet.
 - There is no public/private toggle. Anyone with the share link can open a quiz.
-- The free attempt limit is not implemented yet.
+- Generation is limited to 10 quizzes per user per day (resets at midnight Pakistan time). This protects the shared Gemini free-tier quota.
+- Free tier Gemini limits apply to the whole app, so heavy use can exhaust the daily quota for everyone.
 
 ## Security Notes
 
@@ -107,8 +106,8 @@ Quiz Maker/
 - Forms use antiforgery tokens, and quiz ownership is checked on Details and Delete.
 
 ## Deployment
-
-The app currently runs locally. Planned deployment: Azure App Service with Azure SQL Database. The live link will be added here once deployed.
+The app is deployed on MonsterASP (free ASP.NET Core hosting, SQL Server database). The Gemini API key and database connection string are stored as environment variables on the server, never in source control.
+Live link: https://arslan-quizmaker.runasp.net
 
 ## Author
 
